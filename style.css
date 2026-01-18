@@ -1,0 +1,107 @@
+*{
+  box-sizing:border-box;
+  font-family:tahoma;
+}
+
+body{
+  margin:0;
+  background:#0b0f1a;
+  color:#fff;
+  overflow-x:hidden;
+}
+
+.background{
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(circle at top,#333,#000),
+    repeating-radial-gradient(circle,#fff 0 1px,transparent 1px 45px);
+  animation:stars 90s linear infinite;
+  z-index:-1;
+}
+
+@keyframes stars{
+  from{background-position:0 0}
+  to{background-position:3000px 3000px}
+}
+
+header{
+  text-align:center;
+  padding:25px;
+}
+
+button{
+  padding:10px 15px;
+  border:none;
+  border-radius:8px;
+  background:#1e90ff;
+  color:#fff;
+  cursor:pointer;
+}
+
+.players, .comments-section{
+  max-width:900px;
+  margin:20px auto;
+  padding:15px;
+}
+
+.player-card{
+  background:#141c33;
+  padding:12px;
+  border-radius:10px;
+  margin-bottom:10px;
+  border-left:5px solid #1e90ff;
+}
+
+.player-card.gold{
+  border-left-color:gold;
+  background:linear-gradient(135deg,#3a2f00,#1a1300);
+}
+
+.admin-panel{
+  background:#121a30;
+  padding:15px;
+  border-radius:10px;
+  margin-bottom:15px;
+}
+
+input, textarea{
+  width:100%;
+  margin-bottom:10px;
+  padding:10px;
+  border-radius:6px;
+  border:none;
+}
+
+.comment{
+  background:#141c33;
+  padding:12px;
+  border-radius:10px;
+  margin-bottom:10px;
+  animation:shake .3s;
+}
+
+@keyframes shake{
+  0%{transform:translateX(0)}
+  25%{transform:translateX(-2px)}
+  50%{transform:translateX(2px)}
+}
+
+.comment.gold{
+  border:2px solid gold;
+}
+
+.actions{
+  display:flex;
+  justify-content:space-between;
+  margin-top:8px;
+}
+
+.like{cursor:pointer;color:#1e90ff}
+.delete{cursor:pointer;color:red}
+
+.footer-messages{
+  margin-top:25px;
+  text-align:center;
+  color:#ccc;
+}
