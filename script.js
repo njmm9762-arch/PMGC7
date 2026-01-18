@@ -1,105 +1,101 @@
-const ADMIN_PASSWORD = "1234";
+let audioEnabled = false;
 let lang = "ar";
+const ADMIN_PASSWORD = "1234";
 
 const texts = {
-  ar:{
-    title:"بطولة PMGC",
-    subtitle:"مرحبًا بك في الموقع الرسمي للبطولة"
-  },
-  en:{
-    title:"PMGC Tournament",
-    subtitle:"Welcome to the official tournament website"
-  }
+  ar:{title:"بطولة PMGC", subtitle:"مرحبًا بك في الموقع الرسمي للبطولة"},
+  en:{title:"PMGC Tournament", subtitle:"Welcome to the official tournament website"}
 };
 
-const players = [
-  {name:"عمر السيد محمد × عمر الشافعي", code:"5682"},
-  {name:"محمد أحمد × زياد محمود", code:"1683"},
-  {name:"فارس محسن × يوسف عمرو", code:"8331"},
-  {name:"معاذ محمود × مهند محمود", code:"2326"},
-  {name:"محمد سلامة (أحادي)", code:"1656"}
+// اللاعبين مع الأكواد والID
+const players=[
+  {name:"عمر السيد محمد", code:"5682", id:"5535938673"},
+  {name:"عمر الشافعي", code:"1683", id:"5780015747"},
+  {name:"محمد أحمد", code:"0618", id:"5114404295"},
+  {name:"زياد محمود", code:"4681", id:"5181732509"},
+  {name:"فارس محسن", code:"8331", id:"52013524002"},
+  {name:"يوسف عمرو", code:"1656", id:"5568744837"},
+  {name:"معاذ محمود", code:"8989", id:"5888700371"},
+  {name:"مهند محمود", code:"2326", id:"5789024569"},
+  {name:"محمد سلامة", code:"1656", id:"5964471266"}
 ];
 
-let comments = JSON.parse(localStorage.getItem("comments")) || [];
+let comments=JSON.parse(localStorage.getItem("comments"))||[];
 
-const titleEl = document.getElementById("title");
-const subtitleEl = document.getElementById("subtitle");
-const playersList = document.getElementById("playersList");
-const commentsDiv = document.getElementById("comments");
+const playersList=document.getElementById("playersList");
+const commentsDiv=document.getElementById("comments");
+const welcomeScreen=document.getElementById("welcomeScreen");
+const mainContent=document.getElementById("mainContent");
 
-function typeText(el,text){
-  el.innerHTML="";
-  let i=0;
-  let t=setInterval(()=>{
-    el.innerHTML+=text[i];
-    i++;
-    if(i>=text.length)clearInterval(t);
-  },60);
+function enterSite(){
+  audioEnabled=true;
+  welcomeScreen.style.display="none";
+  mainContent.style.display="block";
+  speak("مرحبًا بك في بطولة PMGC");
+  renderPlayers();
+  renderComments();
 }
 
 function speak(text){
-  const msg = new SpeechSynthesisUtterance(text);
-  msg.lang = lang==="ar" ? "ar" : "en-US";
+  if(!audioEnabled) return;
+  const msg=new SpeechSynthesisUtterance(text);
+  msg.lang=lang==="ar"?"ar":"en-US";
   speechSynthesis.speak(msg);
 }
 
-function renderHeader(){
-  document.documentElement.dir = lang==="ar"?"rtl":"ltr";
-  typeText(titleEl,texts[lang].title);
-  typeText(subtitleEl,texts[lang].subtitle);
-  speak(texts[lang].subtitle);
-}
-
 function toggleLang(){
-  lang = lang==="ar"?"en":"ar";
-  renderHeader();
+  lang=lang==="ar"?"en":"ar";
+  document.documentElement.dir=lang==="ar"?"rtl":"ltr";
+  document.getElementById("title").innerText=texts[lang].title;
+  document.getElementById("subtitle").innerText=texts[lang].subtitle;
 }
 
 function renderPlayers(){
   playersList.innerHTML="";
-  players.forEach(p=>{
+  players.forEach(player=>{
+    const msg=`تم قبول اللاعب ${player.name} في بطولة PMGC. كود الدخول الخاص بك هو ${player.code}`;
+    const whatsappLink=`https://wa.me/201211056530?text=${encodeURIComponent(msg)}`;
     const div=document.createElement("div");
     div.className="player-card gold";
-    div.innerHTML=`<b>${p.name}</b><br>كود الدخول: <strong>${p.code}</strong>`;
+    div.innerHTML=`
+      <h3>${player.name}</h3>
+      <p>ID: ${player.id}</p>
+      <p>كود الدخول: <strong>${player.code}</strong></p>
+      <button onclick="speakPlayer('${player.name}','${player.code}')">🔊 نطق القبول</button>
+      <a href="${whatsappLink}" target="_blank">
+        <button>📱 واتساب – تأكيد الانضمام</button>
+      </a>
+    `;
     playersList.appendChild(div);
   });
 }
 
-function randomLikes(){
-  return Math.floor(Math.random()*400)+150;
+function speakPlayer(name, code){
+  const text=`تم قبول اللاعب ${name} في بطولة PMGC. كود الدخول الخاص بك هو ${code}`;
+  speak(text);
 }
 
-function save(){
-  localStorage.setItem("comments",JSON.stringify(comments));
-}
+function randomLikes(){return Math.floor(Math.random()*400)+150;}
+function save(){localStorage.setItem("comments",JSON.stringify(comments));}
 
 function addAdminComment(){
-  if(adminPass.value!==ADMIN_PASSWORD){
-    alert("كلمة السر غير صحيحة");
+  if(document.getElementById("adminPass").value!==ADMIN_PASSWORD){
+    alert("كلمة سر غير صحيحة");
     return;
   }
   comments.unshift({
-    name:adminName.value,
-    text:adminComment.value,
+    name:document.getElementById("adminName").value,
+    text:document.getElementById("adminComment").value,
     likes:randomLikes(),
     admin:true
   });
   save();
   renderComments();
-  speak(adminComment.value);
+  speak(document.getElementById("adminComment").value);
 }
 
-function likeComment(i){
-  comments[i].likes++;
-  save();
-  renderComments();
-}
-
-function deleteComment(i){
-  comments.splice(i,1);
-  save();
-  renderComments();
-}
+function likeComment(i){comments[i].likes++;save();renderComments();}
+function deleteComment(i){comments.splice(i,1);save();renderComments();}
 
 function renderComments(){
   commentsDiv.innerHTML="";
@@ -117,7 +113,3 @@ function renderComments(){
     commentsDiv.appendChild(d);
   });
 }
-
-renderHeader();
-renderPlayers();
-renderComments();
