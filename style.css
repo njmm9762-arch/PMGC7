@@ -1,7 +1,4 @@
-*{
-  box-sizing:border-box;
-  font-family:tahoma;
-}
+*{box-sizing:border-box;font-family:tahoma;}
 
 body{
   margin:0;
@@ -10,12 +7,11 @@ body{
   overflow-x:hidden;
 }
 
+/* خلفية النجوم */
 .background{
   position:fixed;
   inset:0;
-  background:
-    radial-gradient(circle at top,#333,#000),
-    repeating-radial-gradient(circle,#fff 0 1px,transparent 1px 45px);
+  background:radial-gradient(circle,#333,#000),repeating-radial-gradient(circle,#fff 0 1px,transparent 1px 45px);
   animation:stars 90s linear infinite;
   z-index:-1;
 }
@@ -25,25 +21,54 @@ body{
   to{background-position:3000px 3000px}
 }
 
-header{
-  text-align:center;
-  padding:25px;
+/* شاشة الترحيب */
+.welcome-screen{
+  position:fixed;
+  inset:0;
+  background:radial-gradient(circle,#1a1a1a,#000);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  z-index:1000;
 }
 
-button{
-  padding:10px 15px;
+.welcome-text{
+  font-size:24px;
+  color:gold;
+  text-align:center;
+  text-shadow: 0 0 8px #fff, 0 0 12px gold;
+  margin-bottom:20px;
+  animation:glow 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes glow{
+  0%{text-shadow:0 0 4px #fff,0 0 8px gold;}
+  50%{text-shadow:0 0 10px #fff,0 0 20px gold;}
+  100%{text-shadow:0 0 4px #fff,0 0 8px gold;}
+}
+
+.welcome-screen button{
+  padding:12px 25px;
+  font-size:18px;
   border:none;
   border-radius:8px;
-  background:#1e90ff;
-  color:#fff;
+  background:gold;
+  color:#000;
   cursor:pointer;
+  box-shadow:0 0 10px gold;
+  transition:0.3s;
+}
+.welcome-screen button:hover{
+  box-shadow:0 0 20px gold;
+  transform:scale(1.05);
 }
 
-.players, .comments-section{
-  max-width:900px;
-  margin:20px auto;
-  padding:15px;
-}
+/* المحتوى الرئيسي */
+header{text-align:center;padding:25px}
+button{padding:10px 15px;border:none;border-radius:8px;background:#1e90ff;color:#fff;cursor:pointer}
+
+.players, .comments-section{max-width:900px;margin:20px auto;padding:15px}
 
 .player-card{
   background:#141c33;
@@ -58,20 +83,9 @@ button{
   background:linear-gradient(135deg,#3a2f00,#1a1300);
 }
 
-.admin-panel{
-  background:#121a30;
-  padding:15px;
-  border-radius:10px;
-  margin-bottom:15px;
-}
+.admin-panel{background:#121a30;padding:15px;border-radius:10px;margin-bottom:15px}
 
-input, textarea{
-  width:100%;
-  margin-bottom:10px;
-  padding:10px;
-  border-radius:6px;
-  border:none;
-}
+input,textarea{width:100%;margin-bottom:10px;padding:10px;border-radius:6px;border:none}
 
 .comment{
   background:#141c33;
@@ -87,21 +101,10 @@ input, textarea{
   50%{transform:translateX(2px)}
 }
 
-.comment.gold{
-  border:2px solid gold;
-}
+.comment.gold{border:2px solid gold}
 
-.actions{
-  display:flex;
-  justify-content:space-between;
-  margin-top:8px;
-}
-
+.actions{display:flex;justify-content:space-between;margin-top:8px}
 .like{cursor:pointer;color:#1e90ff}
 .delete{cursor:pointer;color:red}
 
-.footer-messages{
-  margin-top:25px;
-  text-align:center;
-  color:#ccc;
-}
+.footer-messages{margin-top:25px;text-align:center;color:#ccc}
